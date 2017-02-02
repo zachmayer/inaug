@@ -10,4 +10,4 @@ Encoding: UTF-8
 LazyData: true
 Imports: text2vec,
     Rtsne
-Suggests: testthat
+Suggests: testthat, quanteda, data.table, stringi, SnowballC, ggplot2

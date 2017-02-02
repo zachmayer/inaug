@@ -1,40 +1,33 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+First, load the cleaned data. I've cleaned up the inaguration texts by lowercasing them, removing punctuation and normalizing whitespace. I then stemmed the texts and tokenized them into a document-term matrix using 1-5 grams:
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
-
-First, load the cleaned data.  I've cleaned up the inaguration texts by lowercasing them, removing punctuation and normalizing whitespace.  I then stemmed the texts and tokenized them into a document-term matrix using 1-5 grams:
-```{r}
+``` r
 data(text_matrix)
 ```
 
 Now we normalize the data for the fact that they documents have different lengths
-```{r}
+
+``` r
 text_matrix = text2vec::normalize(text_matrix, "l1")
 ```
 
-And then we do a tf-idf transformation.  We use the L1 norm to normalize the data for the fact that documents have different lengths and then sublinear_tf because words are log-linearlly distributed:
-```{r}
+And then we do a tf-idf transformation. We use the L1 norm to normalize the data for the fact that documents have different lengths and then sublinear\_tf because words are log-linearlly distributed:
+
+``` r
 tfidf = text2vec::TfIdf$new(norm='l1', sublinear_tf=TRUE)
 text_matrix = text2vec::fit_transform(text_matrix, tfidf)
 ```
 
 Next, we use PCA to project our giant, sparse matrix down into a small, dense matrix:
-```{r}
+
+``` r
 model_pca <- prcomp(text_matrix, retx=TRUE, center=T, scale=T)$x
 ```
 
 And then we do TSNE on the small, dense matrix:
-```{r}
+
+``` r
 model_tsne <- Rtsne::Rtsne(
   model_pca, dims=2, initial_dims=ncol(model_pca), 
   check_duplicates=FALSE, pca=FALSE, verbose=FALSE, max_iter=10000,
@@ -44,7 +37,8 @@ data.table::setnames(model_tsne, c('TSNE1', 'TSNE2'))
 ```
 
 Finally, we plot the result.
-```{r}
+
+``` r
 library(ggplot2)
 data(meta_data)
 final_data <- data.table::data.table(
@@ -60,3 +54,5 @@ p1 <- ggplot(final_data, aes(x=TSNE1, y=TSNE2, fill=Year, label=Label)) +
   theme_bw()
 print(p1)
 ```
+
+![](README-unnamed-chunk-7-1.png)
