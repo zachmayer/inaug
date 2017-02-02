@@ -1,0 +1,13 @@
+Package: inaug
+Type: Package
+Title: Inaugration Speeches
+Version: 0.0.1
+Author: Zach Mayer
+Maintainer: Zach Mayer <zach.mayer@gmail.com>
+Description: Text analysis of inauguration speeches
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: text2vec,
+    Rtsne
+Suggests: testthat
